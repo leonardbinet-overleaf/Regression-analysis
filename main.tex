@@ -1,0 +1,256 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{outlines}
+\usepackage{amsfonts}
+\usepackage{dsfont}
+\usepackage[ruled,vlined]{algorithm2e}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\usepackage{amsthm}
+\theoremstyle{plain}
+
+\newtheorem*{remark*}{Remarque}
+\newtheorem*{conclusion*}{Conclusion}
+\newtheorem*{theorem*}{Théorème}
+\newtheorem{theorem}{Théorème}
+
+%% For paragraphs to be correctly indented
+\setcounter{secnumdepth}{5}
+\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
+
+%% For Underbars
+\usepackage{accents}
+\newcommand{\ubar}[1]{\underaccent{\bar}{#1}}
+
+%% Double brackets
+\usepackage{stmaryrd}
+
+\title{Linear Regression Analysis}
+\author{Léonard Binet}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+\tableofcontents
+
+
+
+\pagebreak
+
+\section{Linear Regression Model}
+\subsection{Model}
+
+$$ y = \beta_0 + \beta_1 x_1 + ... + \beta_p x_p + \epsilon$$
+
+$$ y = X\beta + \epsilon$$
+
+$$\epsilon \sim \mathcal{N} (0,\sigma^2) $$ 
+
+( $\rightarrow$ Homoscedastic model: $E(\epsilon \epsilon^T)=\sigma^2$ and $E(\epsilon)=0$.)
+
+
+\subsection{Notations and definitions}
+
+\begin{itemize}
+\item our estimator of $\beta$ be $\hat \beta$
+\item our prediction: $ \hat y = X \hat \beta$
+\item residuals: $ e = y-\hat y $
+\item error mean square $MS_E = ||e||^2_2=\frac{1}{n}\sum_{i=1}^n e_i^2$
+\item regression mean square $MS_R = ||||$
+\item correlation coefficient $R$ between $y_1,..,y_n$ and $\hat y_1,...,\hat y_n$. $R^2$ is called determination coefficient:
+$$ R^2 = \frac{
+\sum (y_i - \bar y)^2 
+- \sum (y_i - \hat y_i)^2 }
+{\sum (y_i - \bar y)^2}
+= \frac{\textnormal{Variance explained by regression}}{\textnormal{y Variance}}
+$$
+
+Total Variance = Residual Variance + Regression Variance
+$$
+\frac{1}{n} \sum (y_i - \bar y)^2 = 
+\frac{1}{n} \sum (y_i - \hat y_i)^2 + 
+\frac{1}{n} \sum (\hat y_i - \bar y)^2 
+$$
+\end{itemize}
+
+\pagebreak
+\section{Least Square Estimator for $\beta $ coefficients}
+
+\subsection{Definition}
+$$ \hat \beta \in argmax_{\beta \in \mathbb{R}^{p+1}} \frac{1}{2}||y-X\beta||^2_2$$ 
+
+\subsection{Resolution}
+
+$$ \hat \beta = (X'X)^{-1}X'y$$
+$$ \hat y = X(X'X)^{-1}X'y $$
+$$ \hat y = Hy $$
+where $H=X(X'X)^{-1}X'$ is referred as hat matrix
+
+\subsection{LSE properties}
+
+\subsubsection{Estimator of $\sigma^2$, variance of random error $\epsilon$}
+
+$$\hat \sigma^2 = \frac{1}{n-rg(X)}||y-X\hat \beta||^2_2 = \frac{||y-\hat y||^2_2}{n-rg(X)} = \frac{||e||^2_2}{n-rg(X)}$$
+
+This estimator is unbiased.
+
+\subsubsection{Bias of $\beta$ estimator}
+
+$\hat \beta$ is a unbiased estimator of $\beta$: $E(\hat \beta) = \beta$
+
+\subsubsection{Variance of $\beta$ estimator}
+The variance/covariance matrix of $\hat \beta$ is estimated by:
+
+$$C = Cov(\hat \beta) = \sigma^2 (X'X)^{-1}$$
+
+$$\forall j, \quad Var(\hat \beta_j)= C_{j,j}= \sigma^2 [(X'X)^{-1}_{j,j}] $$
+ie, estimating $\sigma$, we can estimate by:
+$$ 
+\hat Var(\hat \beta_j) =  
+[(X'X)^{-1}_{j,j}] 
+\frac{||y-\hat y||^2_2}{n-rg(X)}
+$$
+
+
+
+\pagebreak
+\section{Hypothesis Tests in Multiple Linear Regression}
+
+This section discusses hypothesis tests on the regression coefficients in multiple linear regression. As in the case of simple linear regression, these tests can only be carried out if it can be assumed that the random error terms, , are normally and independently distributed with a mean of zero and variance of . Three types of hypothesis tests can be carried out for multiple linear regression models:
+
+\begin{itemize}
+\item Test for significance of regression: This test checks the significance of the whole regression model.
+\item Student test $t$, this test checks the significance of individual regression coefficients.
+\item Fisher test $F$: This test can be used to simultaneously check the significance of a number of regression coefficients. It can also be used to test individual coefficients. 
+\end{itemize}
+    
+\subsection{Test for Significance of Regression}
+
+The test for significance of regression in the case of multiple linear regression analysis is carried out using the analysis of variance. The test is used to check if a linear statistical relationship exists between the response variable and at least one of the predictor variables. The statements for the hypotheses are: 
+
+\begin{itemize}
+\item $H_0: \quad \beta_1 = \beta_2 = ... = \beta_p = 0$
+\item $H_1: \quad \beta_j \neq 0$ for at least one $j$
+\end{itemize}
+
+$$F_0 = \frac{MS_R}{MS_E}=\frac{R^2}{1-R^2} \frac{n-p-1}{p} \sim F(p,n-p-1)$$
+
+$$ \frac{R^2}{1-R^2} = 
+\frac{\sum (\hat y_i - \bar y)^2}{\sum (y_i -\bar y)^2 }
+$$
+
+with:
+$H_0$ will be rejected if (and thus confirm a correlation between $X$ and $y$):
+$$F_0 > F_{(p,n-p-1)}(\alpha) $$
+where:
+\begin{itemize}
+\item $F_{(p,n-p-1)}(\alpha)$ is the $\alpha$-quantile of a Fisher distribution function.
+\item $1- \alpha$ is the first species risk (risk of rejecting $H_0$ even though it was correct)
+\end{itemize}
+ 
+\subsection{Test on Individual Regression Coefficients ($t$ Student Test)}
+
+\subsubsection{Is the impact significant? ($H_0$ rejected)}
+
+The $t$ test is used to check the significance of individual regression coefficients in the multiple linear regression model. Adding a significant variable to a regression model makes the model more effective, while adding an unimportant variable may make the model worse. The hypothesis statements to test the significance of a particular regression coefficient, $\beta_j$ , are: 
+
+\begin{itemize}
+\item $H_0: \quad \beta_j = 0$
+\item $H_1: \quad \beta_j \neq 0$ 
+\end{itemize}
+
+$$ T_0 = \frac{\hat \beta_j}{\sqrt{Var(\hat \beta_j})}$$
+
+The analyst would fail to reject (accept) the null hypothesis if the test statistic lies in the acceptance region: 
+$$ -t_{n-p-1}(\alpha/2)< T_0 < t_{n-p-1}(\alpha/2) $$
+
+where:
+\begin{itemize}
+\item $t_{(n-p-1)}(\alpha)$ is the $\alpha$-quantile of a Student distribution function.
+\item $1- \alpha$ is the first species risk (risk of rejecting $H_0$ even though it was correct)
+\end{itemize}
+
+
+\subsubsection{Is the impact equal to a specific value? ($H_0$ NOT rejected)}
+The idea is quite near. We would like here to prove that the coefficient is equal to what we found.
+
+\begin{itemize}
+\item $H_0: \quad \beta_j = b$
+\item $H_1: \quad \beta_j \neq b$ 
+\end{itemize}
+
+$$ T_0 = \frac{\hat \beta_j - b}{\sqrt{Var(\hat \beta_j})}$$
+
+The analyst would fail to reject (accept) the null hypothesis if the test statistic lies in the acceptance region: 
+$$ -t_{n-p-1}(\alpha/2)< T_0 < t_{n-p-1}(\alpha/2) $$
+
+where:
+\begin{itemize}
+\item $t_{(n-p-1)}(\alpha)$ is the $\alpha$-quantile of a Student distribution function.
+\item $1- \alpha$ is the first species risk (risk of rejecting $H_0$ even though it was correct)
+\end{itemize}
+
+\subsection{Test on Subsets of Regression Coefficients (Partial $F$ Test)}
+
+This test can be considered to be the general form of the $t$ test mentioned in the previous section. This is because the test simultaneously checks the significance of including many (or even one) regression coefficients in the multiple linear regression model. Adding a variable to a model increases the regression sum of squares, $SS_R$. The test is based on this increase in the regression sum of squares. The increase in the regression sum of squares is called the extra sum of squares. Assume that the vector of the regression coefficients $\beta$ , for the multiple linear regression model, $y= X\beta + \epsilon$ , is partitioned into two vectors with the second vector, $\theta_2$ , containing the $r$ last regression coefficients, and the first vector, $\theta_1$, containing the first ($k+r+1$) coefficients as follows: 
+$$ \beta =  
+\begin{bmatrix}
+\theta_1 \\
+\theta_2
+\end{bmatrix} 
+$$
+with:
+
+$$ \theta_1 = [\beta_0, .. ,\beta_{p-r}]'$$
+$$ \theta_2 = [\beta_{p-r+1}, .. ,\beta_{p}]'$$
+
+The hypothesis statements to test the significance of adding the regression coefficients in $\theta_2$ to a model containing the regression coefficients $\theta_1$ in may be written as: 
+
+\begin{itemize}
+\item $H_0: \quad \theta_2 = [0,...,0]$
+\item $H_1: \quad \theta_2 \neq [0,...,0]$ 
+\end{itemize}
+
+The test statistic for this test follows the $F$ distribution and can be calculated as follows: 
+
+$$F_0 = 
+\frac{
+SS_R(\theta_2|\theta1)/r
+}
+{MS_E
+} $$
+
+
+\pagebreak
+
+\section{Confidence Intervals in Multiple Linear Regression}
+\subsection{Confidence Interval on Regression Coefficients}
+
+\subsection{Confidence Interval on New Observations}
+
+\pagebreak
+\section{Measures of Model Adequacy}
+
+
+
+
+\pagebreak
+\bibliographystyle{alpha}
+\bibliography{sample}
+\end{document}
